@@ -166,7 +166,10 @@ def process_data(currency="Доллар", city="Томск"):
                      + '/' + city_values.get(city)).content.decode('utf-8')
     data = findall(REGULAR, content)
 
-    if len(data) > 0:
+    if len(data) == 0:
+        print('Ничего не найдено! Вероятно, в этом городе нет банков,\n'
+              'работающих с выбранной Вами валютой. :-( ')
+    else:
         print('Сводка на данный момент времени:\n')
         for each in data:
             print("{0}:\nпокупка: {1} руб, продажа: {2} руб\n".format(each[0],
@@ -191,7 +194,7 @@ def process_data(currency="Доллар", city="Томск"):
                 break
 
         print('Итог:')
-        print('Самая дешевая покупка: ' + min_buy + ' руб в ' + min_city)
+        print('Самая дешевая покупка: ' + min_buy  + ' руб в ' + min_city)
         print('Самая дорогая продажа: ' + max_sell + ' руб в ' + max_city)
         print()
 
@@ -214,9 +217,6 @@ def process_data(currency="Доллар", city="Томск"):
                 file.write('\n')
             print()
             print('Успешно сохранено в файл: ' + file_name)
-    else:
-        print('Ничего не найдено! Вероятно, в этом городе нет банков,\n'
-              'работающих с выбранной Вами валютой. :-( ')
 
 
 if __name__ == '__main__':

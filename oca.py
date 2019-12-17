@@ -93,7 +93,7 @@ def get_column_from_complex_list(passed_list, column_num):
 def main():
     """Literally the main cycle of a script"""
     print('Варианты выбора:\n'
-          '1: Стандартный поиск   (доллары, Томск)\n'
+          '1: Стандартный поиск   (Доллар, Томск)\n'
           '2: Настраиваемый поиск (выбор валюты и города)\n'
           '3: Вывод подсказки\n'
           '0: Выход из программы')

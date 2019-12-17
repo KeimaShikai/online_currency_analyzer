@@ -24,16 +24,34 @@ REGULAR = r'>([а-яА-Я ]*)<\/a><\/td><td class="[\w\s-]*"><span id="[\w_-]*" 
            '"><span id="[\w_-]*" class="[\w_-]*" data-curse-val="([\d.]*)" data'
 
 
-currency_values = ('usd', 'eur', 'gbp', 'kzt', 'cny', 'chf', 'jpy')
+currency_values = {'Доллар':'usd', 'Евро':'eur', 'Фунт':'gpb', 'Тенге':'kzt',
+                   'Юань':'cny', 'Франк':'chf', 'Йена':'jpy'}
 
-city_values = ('moskva', 'sankt-peterburg', 'ekaterinburg', 'kazan',
-               'nizhniy-novgorod', 'novosibirsk', 'omsk', 'samara',
-               'chelyabinsk', 'rostov-na-donu', 'ufa', 'krasnoyarsk',
-               'perm', 'voronezh', 'volgograd', 'krasnodar',
-               'saratov', 'tumen', 'tolyatti', 'izhevsk',
-               'barnaul', 'irkutsk', 'ulyanovsk', 'habarovsk',
-               'yaroslavl', 'vladivostok', 'mahachkala', 'tomsk',
-               'orenburg', 'kemerovo', 'novokuzneck')
+# city_values = ('moskva', 'sankt-peterburg', 'ekaterinburg', 'kazan',
+               # 'nizhniy-novgorod', 'novosibirsk', 'omsk', 'samara',
+               # 'chelyabinsk', 'rostov-na-donu', 'ufa', 'krasnoyarsk',
+               # 'perm', 'voronezh', 'volgograd', 'krasnodar',
+               # 'saratov', 'tumen', 'tolyatti', 'izhevsk',
+               # 'barnaul', 'irkutsk', 'ulyanovsk', 'habarovsk',
+               # 'yaroslavl', 'vladivostok', 'mahachkala', 'tomsk',
+               # 'orenburg', 'kemerovo', 'novokuzneck')
+
+city_values = {'Москва':'moskva', 'Санкт-Петербург':'sankt-peterburg',
+               'Екатеринбург':'ekaterinburg', 'Kазань':'kazan',
+               'Нижний Новгород':'nizhniy-novgorod', 'Новосибирск':'novosibirsk',
+               'Омск':'omsk', 'Самара':'samara',
+               'Челябинск':'chelyabinsk', 'Ростов-на-Дону':'rostov-na-donu',
+               'Уфа':'ufa', 'Красноярск':'krasnoyarsk',
+               'Пермь':'perm', 'Воронеж':'voronezh',
+               'Волгоград':'volgograd', 'Краснодар':'krasnodar',
+               'Саратов':'saratov', 'Тюмень':'tumen',
+               'Тольятти':'tolyatti', 'Ижевск':'izhevsk',
+               'Барнаул':'barnaul', 'Иркутск':'irkutsk',
+               'Ульяновск':'ulyanovsk', 'Хабаровск':'habarovsk',
+               'Ярославль':'yaroslavl', 'Владивосток':'vladivostok',
+               'Махачкала':'mahachkala', 'Томск':'tomsk',
+               'Оренбург':'orenburg', 'Кемерово':'kemerovo',
+               'Новокузнецк':'novokuzneck'}
 
 
 def main():
@@ -61,8 +79,18 @@ def main():
 
 def show_help_info():
     """some info"""
-    print('Тут будут данные')
-    # TODO add nice output
+    print()
+    print('Данная софтина предоставляет возможность за несколько секунд\n'
+          'получить информации о курсе определенной валюты в различныйх\n'
+          'банках через вашу консоль. Быстро и удобно.\n')
+    print('Имеется возможность вывода информации в консоль или записи\n'
+          'в файл.')
+    print('\nВ качестве валют Вы можете выбрать следующие варианты:')
+    print(', '.join(currency_values))
+    print('\nВ качестве городов Вы можете выбрать следующие варианты:')
+    city_list = list(city_values)
+    for i in range(0, len(city_list), 3):
+        print(', '.join(city_list[i:i + 3]))
 
 def filtered_search():
     """some info"""
@@ -76,7 +104,8 @@ def filtered_search():
         print('Вы ввели неверное название города!')
         quit()
 
-    process_data(URL_BASE + currency + '/' + city)
+    process_data(URL_BASE + currency_values.get(currency) +
+                      '/' + city_values.get(city))
 
 def process_data(url):
     """some info"""
@@ -102,6 +131,7 @@ def test():
 # TODO comment the code
 # TODO fix README
 # TODO add GUI?
+
 
 if __name__ == '__main__':
     main()

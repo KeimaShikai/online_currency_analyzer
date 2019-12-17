@@ -96,7 +96,12 @@ def test():
             print("{0}: \nпокупка: {1}, продажа: {2}\n".format(i[0], i[1], i[2]))
 
 
+# TODO add writing into the file
+# TODO add output dividers through the decorators
+# TODO test all parts
 # TODO comment the code
+# TODO fix README
+# TODO add GUI?
 
 if __name__ == '__main__':
     main()

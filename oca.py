@@ -86,8 +86,8 @@ def dividers(func):
     return wrapper
 
 
-def get_column_from_complex_list(passed_list, column_num):
-    return [row[column_num] for row in passed_list]
+def get_column_from_complex_list(passed_list, column_index):
+    return [row[column_index] for row in passed_list]
 
 
 def main():

@@ -12,14 +12,18 @@ from functools import wraps
 
 '''Online currency analyzer (Онлайн анализатор валют)
 
-I will add some extra info in here to make it look like
-I'm da professional.
+This code is a script, the main task of which is to download certain pages
+of fixed sites, and then parse data related to the rate of given currencies
+in various banks of Russian cities. Additionally, banks with the cheapest
+purchase and the most expensive sale of currency are determined. The parsed
+data can be saved to a file for subsequent manual analysis.
 
 Данный код является скриптом, основная задача которого заклчается в том, чтобы
 выгружать определенные странницы фиксированных сайтов, а затем разбирать
 данные, связанные с курсом заданных валют в различных банках ряда городов
-России. Разобранные данные можно сохранить в файл для их последующего
-ручного анализа.
+России. Дополнительно определяются банки с самой дешевой закупкой и с самой
+дорогой продажей валюты. Разобранные данные можно сохранить в файл для их
+последующего ручного анализа.
 
 '''
 
@@ -87,7 +91,7 @@ def get_column_from_complex_list(passed_list, column_num):
 
 
 def main():
-    """some info"""
+    """Literally the main cycle of a script"""
     print('Варианты выбора:\n'
           '1: Стандартный поиск   (доллары, Томск)\n'
           '2: Настраиваемый поиск (выбор валюты и города)\n'
@@ -112,13 +116,17 @@ def main():
 
 @dividers
 def show_help_info():
-    """some info"""
+    """Help info handler"""
     print('Данная софтина предоставляет возможность за несколько секунд\n'
           'получить информации о курсе определенной валюты в различныйх\n'
-          'банках через вашу консоль. Быстро и удобно.')
+          'банках через вашу консоль. Быстро и удобно.\n'
+          'Дополнительно выводится информация о выгодных покупке\n'
+          'и продаже валюты с соответствующими банками для выбраного\n'
+          'города.')
     print()
-    print('Имеется возможность вывода информации в консоль\n'
-          'или записи в файл.')
+    print('Имеются возможности:\n'
+          ' - вывода информации в консоль;\n'
+          ' - и записи в файл.')
     print()
     print('В качестве валют Вы можете выбрать следующие варианты:')
     print(', '.join(currency_values))
@@ -128,14 +136,12 @@ def show_help_info():
     for i in range(0, len(city_list), 3):
         print(', '.join(city_list[i:i + 3]))
     print()
-    print('P.S.: Не во всех городах принимают все валюты!\n'
-          'Если программа вывела пустые строки, значит выбранная\n'
-          'валюта отсутствует в указанном городе.')
+    print('P.S.: Не во всех городах принимают все валюты!')
 
 
 @dividers
 def filtered_search():
-    """some info"""
+    """Search filter settings function"""
     currency = input('Пожалуйста, введите наименование валюты: ')
     if (currency not in currency_values):
         print('Вы ввели неверное название валюты!')
@@ -153,7 +159,7 @@ def filtered_search():
 
 @dividers
 def process_data(currency="Доллар", city="Томск"):
-    """some info"""
+    """The function that parses and outputs data"""
     content = get(URL_BASE + currency_values.get(currency)
                      + '/' + city_values.get(city)).content.decode('utf-8')
     data = findall(REGULAR, content)
@@ -165,6 +171,7 @@ def process_data(currency="Доллар", city="Томск"):
                                                                       each[1],
                                                                       each[2]))
 
+        # look for min purchase price and its bank
         min_city = max_city = ''
         buy  = get_column_from_complex_list(data, 1)
         min_buy = min(buy)
@@ -173,6 +180,7 @@ def process_data(currency="Доллар", city="Томск"):
                 min_city = each[0]
                 break
 
+        # look for max sell price and its bank
         sell = get_column_from_complex_list(data, 2)
         max_sell = max(sell)
         for each in data:
@@ -183,8 +191,9 @@ def process_data(currency="Доллар", city="Томск"):
         print('Итог:')
         print('Самая дешевая покупка: ' + min_buy + ' руб в ' + min_city)
         print('Самая дорогая продажа: ' + max_sell + ' руб в ' + max_city)
-
         print()
+
+        # writing into the file block
         if (input('Введите \'1\' для записи в файл: ') == '1'):
             file_name = currency + '_' + city + strftime('_%d_%b_%H:%M.log')
             with open(file_name, 'w') as file:
@@ -208,7 +217,6 @@ def process_data(currency="Доллар", city="Томск"):
               'работающих с выбранной Вами валютой. :-( ')
 
 
-# TODO comment the code
 # TODO test all parts
 # TODO fix README
 

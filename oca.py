@@ -7,6 +7,7 @@
 from requests import get
 from re import findall
 from time import strftime
+from functools import wraps
 
 
 '''FUTURE DOCS INFO
@@ -75,6 +76,15 @@ city_values = {'Москва'          : 'moskva',
                'Новокузнецк'     : 'novokuzneck'}
 
 
+def dividers(func):
+    @wraps(func)
+    def wrapper(*args):
+        print('\n|********************************************************|\n')
+        func(*args)
+        print('\n|********************************************************|\n')
+    return wrapper
+
+
 def main():
     """some info"""
     print('Варианты выбора:\n'
@@ -98,9 +108,9 @@ def main():
         else:
             print('Неверный ввод!')
 
+@dividers
 def show_help_info():
     """some info"""
-    print()
     print('Данная софтина предоставляет возможность за несколько секунд\n'
           'получить информации о курсе определенной валюты в различныйх\n'
           'банках через вашу консоль. Быстро и удобно.\n')
@@ -115,6 +125,7 @@ def show_help_info():
     for i in range(0, len(city_list), 3):
         print(', '.join(city_list[i:i + 3]))
 
+@dividers
 def filtered_search():
     """some info"""
     currency = input('Пожалуйста, введиете наименование валюты: ')
@@ -129,12 +140,12 @@ def filtered_search():
 
     process_data(currency, city)
 
+@dividers
 def process_data(currency="Доллар", city="Томск"):
     """some info"""
     content = get(URL_BASE + currency_values.get(currency)
                      + '/' + city_values.get(city)).content.decode('utf-8')
     data = findall(REGULAR, content)
-    print()
     print('Сводка на данный момент времени:\n')
     for each in data:
         print("{0}:\nпокупка: {1} руб, продажа: {2} руб\n".format(each[0],
@@ -151,18 +162,7 @@ def process_data(currency="Доллар", city="Томск"):
                                                        each[2]))
 
 
-# TODO remove this function
-def test():
-    with open('tomsk.html', 'r') as test:
-        t = test.read()
-        data = findall(REGULAR, t)
-        print('Сводка на данный момент времени:\n')
-        for i in data:
-            print("{0}: \nпокупка: {1} руб, продажа: {2} руб\n".format(i[0], i[1], i[2]))
-
-
-# TODO add output dividers through the decorators
-# TODO test all parts (and check names
+# TODO test all parts (and check names)
 # TODO comment the code
 # TODO fix README
 # TODO add GUI?

@@ -177,25 +177,26 @@ def process_data(currency="Доллар", city="Томск"):
                                                                       each[2]))
 
         # look for min purchase price and its bank
-        min_city = max_city = ''
+        min_bank = ''
         buy  = get_column_from_complex_list(data, 1)
         min_buy = min(buy)
         for each in data:
             if each[1] == min_buy:
-                min_city = each[0]
+                min_bank = each[0]
                 break
 
         # look for max sell price and its bank
+        max_bank = ''
         sell = get_column_from_complex_list(data, 2)
         max_sell = max(sell)
         for each in data:
             if each[2] == max_sell:
-                max_city = each[0]
+                max_bank = each[0]
                 break
 
         print('Итог:')
-        print('Самая дешевая покупка: ' + min_buy  + ' руб в ' + min_city)
-        print('Самая дорогая продажа: ' + max_sell + ' руб в ' + max_city)
+        print('Самая дешевая покупка: ' + min_buy  + ' руб в ' + min_bank)
+        print('Самая дорогая продажа: ' + max_sell + ' руб в ' + max_bank)
         print()
 
         # writing into the file block
@@ -210,10 +211,10 @@ def process_data(currency="Доллар", city="Томск"):
                 file.write('\n')
                 file.write('Итог:\n')
                 file.write('Самая дешевая покупка: ' + min_buy
-                                                     + ' руб в ' + min_city)
+                                                     + ' руб в ' + min_bank)
                 file.write('\n')
                 file.write('Самая дорогая продажа: ' + max_sell
-                                                     + ' руб в ' + max_city)
+                                                     + ' руб в ' + max_bank)
                 file.write('\n')
             print()
             print('Успешно сохранено в файл: ' + file_name)

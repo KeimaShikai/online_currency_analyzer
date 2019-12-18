@@ -36,53 +36,57 @@ REGULAR = r'>([а-яА-Я ]*)<\/a><\/td><td class="[\w\s-]*"><span id="[\w_-]*" 
            '"><span id="[\w_-]*" class="[\w_-]*" data-curse-val="([\d.]*)" data'
 
 
-currency_values = {'Доллар' : 'usd',
-                   'Евро'   : 'eur',
-                   'Фунт'   : 'gbp',
-                   'Тенге'  : 'kzt',
-                   'Юань'   : 'cny',
-                   'Франк'  : 'chf',
-                   'Йена'   : 'jpy'}
+currency_values = {
+        'Доллар' : 'usd',
+        'Евро'   : 'eur',
+        'Фунт'   : 'gbp',
+        'Тенге'  : 'kzt',
+        'Юань'   : 'cny',
+        'Франк'  : 'chf',
+        'Йена'   : 'jpy'
+}
 
-city_values = {'Москва'          : 'moskva',
-               'Санкт-Петербург' : 'sankt-peterburg',
-               'Екатеринбург'    : 'ekaterinburg',
-               'Kазань'          : 'kazan',
-               'Нижний Новгород' : 'nizhniy-novgorod',
-               'Новосибирск'     : 'novosibirsk',
-               'Омск'            : 'omsk',
-               'Самара'          : 'samara',
-               'Челябинск'       : 'chelyabinsk',
-               'Ростов-на-Дону'  : 'rostov-na-donu',
-               'Уфа'             : 'ufa',
-               'Красноярск'      : 'krasnoyarsk',
-               'Пермь'           : 'perm',
-               'Воронеж'         : 'voronezh',
-               'Волгоград'       : 'volgograd',
-               'Краснодар'       : 'krasnodar',
-               'Саратов'         : 'saratov',
-               'Тюмень'          : 'tumen',
-               'Тольятти'        : 'tolyatti',
-               'Ижевск'          : 'izhevsk',
-               'Барнаул'         : 'barnaul',
-               'Иркутск'         : 'irkutsk',
-               'Ульяновск'       : 'ulyanovsk',
-               'Хабаровск'       : 'habarovsk',
-               'Ярославль'       : 'yaroslavl',
-               'Владивосток'     : 'vladivostok',
-               'Махачкала'       : 'mahachkala',
-               'Томск'           : 'tomsk',
-               'Оренбург'        : 'orenburg',
-               'Кемерово'        : 'kemerovo',
-               'Новокузнецк'     : 'novokuzneck'}
+city_values = {
+        'Москва'          : 'moskva',
+        'Санкт-Петербург' : 'sankt-peterburg',
+        'Екатеринбург'    : 'ekaterinburg',
+        'Kазань'          : 'kazan',
+        'Нижний Новгород' : 'nizhniy-novgorod',
+        'Новосибирск'     : 'novosibirsk',
+        'Омск'            : 'omsk',
+        'Самара'          : 'samara',
+        'Челябинск'       : 'chelyabinsk',
+        'Ростов-на-Дону'  : 'rostov-na-donu',
+        'Уфа'             : 'ufa',
+        'Красноярск'      : 'krasnoyarsk',
+        'Пермь'           : 'perm',
+        'Воронеж'         : 'voronezh',
+        'Волгоград'       : 'volgograd',
+        'Краснодар'       : 'krasnodar',
+        'Саратов'         : 'saratov',
+        'Тюмень'          : 'tumen',
+        'Тольятти'        : 'tolyatti',
+        'Ижевск'          : 'izhevsk',
+        'Барнаул'         : 'barnaul',
+        'Иркутск'         : 'irkutsk',
+        'Ульяновск'       : 'ulyanovsk',
+        'Хабаровск'       : 'habarovsk',
+        'Ярославль'       : 'yaroslavl',
+        'Владивосток'     : 'vladivostok',
+        'Махачкала'       : 'mahachkala',
+        'Томск'           : 'tomsk',
+        'Оренбург'        : 'orenburg',
+        'Кемерово'        : 'kemerovo',
+        'Новокузнецк'     : 'novokuzneck'
+}
 
 
 def dividers(func):
     @wraps(func)
     def wrapper(*args):
-        print('\n|********************************************************|\n')
+        print('\n|' + '*' * 60 + '|\n')
         func(*args)
-        print('\n|********************************************************|\n')
+        print('\n|' + '*' * 60 + '|\n')
     return wrapper
 
 
@@ -167,14 +171,14 @@ def process_data(currency="Доллар", city="Томск"):
               'работающих с выбранной Вами валютой. :-( ')
     else:
         print('Сводка на данный момент времени:\n')
-        result_str = ''
+        result = []
         for each in data:
-            result_str += f'{each[0]}:\n'
-            result_str += f'покупка: {each[1]} руб, продажа: {each[2]} руб\n\n'
+            result.append(f'{each[0]}:\n')
+            result.append(f'покупка: {each[1]} руб, продажа: {each[2]} руб\n\n')
 
         # look for min purchase price and its bank
         min_bank = ''
-        buy  = get_column_from_complex_list(data, 1)
+        buy = get_column_from_complex_list(data, 1)
         min_buy = min(buy)
         for each in data:
             if each[1] == min_buy:
@@ -190,17 +194,18 @@ def process_data(currency="Доллар", city="Томск"):
                 max_bank = each[0]
                 break
 
-        result_str += 'Итог:\n'
-        result_str += f'Самая дешевая покупка: {min_buy} руб в {min_bank}\n'
-        result_str += f'Самая дорогая продажа: {max_sell} руб в {max_bank}\n'
+        result.append('Итог:\n')
+        result.append(f'Самая дешевая покупка: {min_buy} руб в {min_bank}\n')
+        result.append(f'Самая дорогая продажа: {max_sell} руб в {max_bank}\n')
 
+        result_str = ''.join(result)
         print(result_str)
 
         # writing into the file block
         if (input('\nВведите "1" для записи в файл: ') == '1'):
             file_name = currency + '_' + city + strftime('_%d_%b_%H:%M.log')
-            with open(file_name, 'w') as file:
-                file.write(result_str)
+            with open(file_name, 'w') as f:
+                f.write(result_str)
             print('\nУспешно сохранено в файл: ' + file_name)
 
 

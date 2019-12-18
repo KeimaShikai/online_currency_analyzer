@@ -84,9 +84,9 @@ city_values = {
 def dividers(func):
     @wraps(func)
     def wrapper(*args):
-        print('\n|' + '*' * 60 + '|\n')
+        print('\n|{:*^60}|\n'.format(""))
         func(*args)
-        print('\n|' + '*' * 60 + '|\n')
+        print('\n|{:*^60}|\n'.format(""))
     return wrapper
 
 

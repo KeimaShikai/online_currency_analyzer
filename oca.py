@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # autor: KeimaShikai
-# version: 0.1
+# version: 0.3
 
 
 from requests import get

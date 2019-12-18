@@ -97,17 +97,17 @@ def main():
           '2: Настраиваемый поиск (выбор валюты и города)\n'
           '3: Вывод подсказки\n'
           '0: Выход из программы')
-    while (True):
+    while True:
         switch = input('Введите номер действия: ')
-        if   (switch == "1"):
+        if   switch == "1":
             process_data()
             quit()
-        elif (switch == "2"):
+        elif switch == "2":
             filtered_search()
             quit()
-        elif (switch == "3"):
+        elif switch == "3":
             show_help_info()
-        elif (switch == "0"):
+        elif switch == "0":
             print('На подскоке!')
             quit()
         else:
@@ -117,43 +117,39 @@ def main():
 @dividers
 def show_help_info():
     """Help info handler"""
-    print('Онлайн анализатор валют')
-    print()
-    print('Данная софтина предоставляет возможность за несколько секунд\n'
+    print('Онлайн анализатор валют',
+          'Данная софтина предоставляет возможность за несколько секунд\n'
           'получить информации о курсе определенной валюты в различныйх\n'
           'банках через вашу консоль. Быстро и удобно.\n'
           'Дополнительно выводится информация о выгодных покупке\n'
           'и продаже валюты с соответствующими банками для выбраного\n'
-          'города.')
-    print()
-    print('Имеются возможности:\n'
+          'города.',
+          'Имеются возможности:\n'
           ' - вывода информации в консоль;\n'
-          ' - и записи в файл.')
-    print()
-    print('В качестве валют Вы можете выбрать следующие варианты:')
+          ' - и записи в файл.',
+          sep='\n\n')
+    print('\nВ качестве валют Вы можете выбрать следующие варианты:')
     print(', '.join(currency_values))
-    print()
-    print('В качестве городов Вы можете выбрать следующие варианты:')
+    print('\nВ качестве городов Вы можете выбрать следующие варианты:')
     city_list = list(city_values)
     for i in range(0, len(city_list), 3):
         print(', '.join(city_list[i:i + 3]))
-    print()
-    print('P.S.: Не во всех городах принимают все валюты!')
+    print('\nP.S.: Не во всех городах принимают все валюты!')
 
 
 @dividers
 def filtered_search():
     """Search filter settings function"""
     currency = input('Пожалуйста, введите наименование валюты: ')
-    if (currency not in currency_values):
-        print('Вы ввели неверное название валюты!')
-        print('Список доступных валют можно просмотреть в выводе подсказки.')
+    if currency not in currency_values:
+        print('Вы ввели неверное название валюты!\n'
+              'Список доступных валют можно просмотреть в выводе подсказки.')
         quit()
 
     city = input('И введите название города: ')
-    if (city not in city_values):
-        print('Вы ввели неверное название города!')
-        print('Список доступных городов можно просмотреть в выводе подсказки.')
+    if city not in city_values:
+        print('Вы ввели неверное название города!\n'
+              'Список доступных городов можно просмотреть в выводе подсказки.')
         quit()
 
     process_data(currency, city)
@@ -162,19 +158,19 @@ def filtered_search():
 @dividers
 def process_data(currency="Доллар", city="Томск"):
     """The function that parses and outputs data"""
-    content = get(URL_BASE + currency_values.get(currency)
-                     + '/' + city_values.get(city)).content.decode('utf-8')
+    content = get(URL_BASE + currency_values.get(currency) +
+                       '/' + city_values.get(city)).content.decode('utf-8')
     data = findall(REGULAR, content)
 
-    if len(data) == 0:
+    if not data:
         print('Ничего не найдено! Вероятно, в этом городе нет банков,\n'
               'работающих с выбранной Вами валютой. :-( ')
     else:
         print('Сводка на данный момент времени:\n')
+        result_str = ''
         for each in data:
-            print("{0}:\nпокупка: {1} руб, продажа: {2} руб\n".format(each[0],
-                                                                      each[1],
-                                                                      each[2]))
+            result_str += f'{each[0]}:\n'
+            result_str += f'покупка: {each[1]} руб, продажа: {each[2]} руб\n\n'
 
         # look for min purchase price and its bank
         min_bank = ''
@@ -194,30 +190,18 @@ def process_data(currency="Доллар", city="Томск"):
                 max_bank = each[0]
                 break
 
-        print('Итог:')
-        print('Самая дешевая покупка: ' + min_buy  + ' руб в ' + min_bank)
-        print('Самая дорогая продажа: ' + max_sell + ' руб в ' + max_bank)
-        print()
+        result_str += 'Итог:\n'
+        result_str += f'Самая дешевая покупка: {min_buy} руб в {min_bank}\n'
+        result_str += f'Самая дорогая продажа: {max_sell} руб в {max_bank}\n'
+
+        print(result_str)
 
         # writing into the file block
-        if (input('Введите \'1\' для записи в файл: ') == '1'):
+        if (input('\nВведите "1" для записи в файл: ') == '1'):
             file_name = currency + '_' + city + strftime('_%d_%b_%H:%M.log')
             with open(file_name, 'w') as file:
-                for each in data:
-                    file.write("{0}:\nпокупка: {1} руб, "\
-                               "продажа: {2} руб\n".format(each[0],
-                                                           each[1],
-                                                           each[2]))
-                file.write('\n')
-                file.write('Итог:\n')
-                file.write('Самая дешевая покупка: ' + min_buy
-                                                     + ' руб в ' + min_bank)
-                file.write('\n')
-                file.write('Самая дорогая продажа: ' + max_sell
-                                                     + ' руб в ' + max_bank)
-                file.write('\n')
-            print()
-            print('Успешно сохранено в файл: ' + file_name)
+                file.write(result_str)
+            print('\nУспешно сохранено в файл: ' + file_name)
 
 
 if __name__ == '__main__':
